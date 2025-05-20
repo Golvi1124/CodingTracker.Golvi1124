@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using CodingTracker.Golvi1124.Data;
+using CodingTracker.Golvi1124.UI;
 
-IConfiguration configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .Build();
-
-string connectionString = configuration.GetSection("ConnectionStrings")["DefaultConnection"];
-
-var dataAccess = new DataAccess(connectionString);
+var dataAccess = new DataAccess();
 
 dataAccess.CreateDatabase();
+
+SeedData.SeedRecords(20); // comment out when done with testing
+
+UserInterface.MainMenu();

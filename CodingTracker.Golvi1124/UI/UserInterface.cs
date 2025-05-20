@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CodingTracker.Golvi1124.Data;
+using CodingTracker.Golvi1124.Helpers;
+using CodingTracker.Golvi1124.Models;
 using Spectre.Console;
 using static CodingTracker.Golvi1124.UI.Enums;
 
@@ -33,7 +37,9 @@ internal static class UserInterface
                     AddRecord();
                     break;
                 case MainMenuChoices.ViewRecords:
-                    ViewRecords();
+                    var dataAccess = new DataAccess();
+                    var records = dataAccess.GetAllRecords();
+                    ViewRecords(records);
                     break;
                 case MainMenuChoices.UpdateRecord:
                     UpdateRecord();
@@ -51,22 +57,95 @@ internal static class UserInterface
 
     private static void DeleteRecord()
     {
+        var dataAccess = new DataAccess();
+        var records = dataAccess.GetAllRecords();
+        ViewRecords(records);
 
+        var id = GetNumber("Please type the id of the habit you want to delete.");
+
+        if (!AnsiConsole.Confirm("Are you sure?"))
+            return;
+
+        var response = dataAccess.DeleteRecord(id);
+
+        var responseMessage = response < 1
+            ? $"Record with the id {id} doesn't exist. Press any key to return to Main Menu"
+            : "Record deleted successfully. Press any key to return to Main Menu";
+
+        System.Console.WriteLine(responseMessage);
+        System.Console.ReadKey();
     }
 
     private static void UpdateRecord()
     {
+        var dataAccess = new DataAccess();
+        var records = dataAccess.GetAllRecords();
+        ViewRecords(records);
 
+        var id = GetNumber("Please type the id of the habit you want to update.");
+
+        var record = records.Where(x => x.Id == id).Single();
+        var dates = GetDateInputs();
+
+        record.DateStart = dates[0];
+        record.DateEnd = dates[1];
+
+        dataAccess.UpdateRecord(record);
     }
 
-    private static void ViewRecords()
+    private static int GetNumber(string message)
     {
+        string numberInput = AnsiConsole.Ask<string>(message);
 
+        if (numberInput == "0") MainMenu();
+
+        var output = Validation.ValidateInt(numberInput, message);
+
+        return output;
+    }
+
+    private static void ViewRecords(IEnumerable<CodingRecord> records)
+    {
+        var table = new Table();
+        table.AddColumn("Id");
+        table.AddColumn("Start Date");
+        table.AddColumn("End Date");
+        table.AddColumn("Duration");
+
+        foreach (var record in records)
+        {
+            table.AddRow(record.Id.ToString(), record.DateStart.ToString(), record.DateEnd.ToString(), $"{record.Duration.TotalHours} hours {record.Duration.TotalMinutes % 60} minutes");
+        }
+
+        AnsiConsole.Write(table);
     }
 
     private static void AddRecord()
     {
+        CodingRecord record = new();
 
+        var dateInputs = GetDateInputs();
+        record.DateStart = dateInputs[0];
+        record.DateEnd = dateInputs[1];
+
+        var dataAccess = new DataAccess();
+        dataAccess.InsertRecord(record);
+    }
+    private static DateTime[] GetDateInputs()
+    {
+        var startDateInput = AnsiConsole.Ask<string>("Input Start Date with the format: dd-mm-yy hh:mm (24 hour clock). Or enter 0 to return to main menu.");
+
+        if (startDateInput == "0") MainMenu();
+
+        var startDate = Validation.ValidateStartDate(startDateInput);
+
+        var endDateInput = AnsiConsole.Ask<string>("Input End Date with the format: dd-mm-yy hh:mm (24 hour clock). Or enter 0 to return to main menu.");
+
+        if (endDateInput == "0") MainMenu();
+
+        var endDate = Validation.ValidateEndDate(startDate, endDateInput);
+
+        return [startDate, endDate];
     }
 }
 
