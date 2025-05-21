@@ -21,12 +21,15 @@ internal class StopwatchService
 
         AnsiConsole.MarkupLine("[yellow]Stopwatch started! Press [bold]Enter[/] again to stop.[/]\n");
 
-        AnsiConsole.Live(new Markup(""))
+        string displayText = "";
+        AnsiConsole.Live(new Panel(displayText).Expand())
             .Start(ctx =>
             {
                 while (!Console.KeyAvailable)
                 {
-                    ctx.UpdateTarget(new Markup($"[blue]Elapsed time:[/] {stopwatch.Elapsed:hh\\:mm\\:ss}"));
+                    var elapsed = stopwatch.Elapsed;
+                    displayText = $"[blue]Elapsed time:[/] {elapsed:hh\\:mm\\:ss}";
+                    ctx.UpdateTarget(new Panel(displayText).Expand());
                     Thread.Sleep(1000);
                 }
             });
@@ -36,7 +39,7 @@ internal class StopwatchService
         var endTime = DateTime.Now;
         var duration = stopwatch.Elapsed;
 
-        AnsiConsole.MarkupLine($"\n[bold green]Stopped! Total time: {duration}[/]");
+        AnsiConsole.MarkupLine($"\n[bold green]Stopped! Total time: {duration} (seconds will be rounded to minutes)[/]");
         return (startTime, endTime, duration);
     }
 }

@@ -120,7 +120,21 @@ internal static class UserInterface
 
         foreach (var record in records)
         {
-            table.AddRow(record.Id.ToString(), record.DateStart.ToString(), record.DateEnd.ToString(), $"{record.Duration.TotalHours} hours {record.Duration.TotalMinutes % 60} minutes");
+            var hours = (int)record.Duration.TotalHours;
+            var minutes = (int)Math.Round(record.Duration.TotalMinutes % 60);
+
+            if (minutes == 60)
+            {
+                hours++;
+                minutes = 0;
+            }
+
+            table.AddRow(
+                record.Id.ToString(),
+                record.DateStart.ToString("dd-MMM-yy HH:mm:ss"),
+                record.DateEnd.ToString("dd-MMM-yy HH:mm:ss"),
+                $"{hours} hours {minutes} minutes"
+            );
         }
 
         AnsiConsole.Write(table);
@@ -161,18 +175,38 @@ internal static class UserInterface
 
         var (start, end, duration) = stopwatchService.RunStopwatch();
 
-        CodingRecord record = new()
+        // Ensure that seconds are rounded up to the nearest minute
+        if (duration.TotalMinutes < 1)
         {
-            DateStart = start,
-            DateEnd = end,
-            Duration = duration
-        };
+            duration = TimeSpan.FromMinutes(1);
+        }
 
-        dataAccess.InsertRecord(record);
+        AnsiConsole.MarkupLine($"\n[bold yellow]Session summary:[/]");
+        AnsiConsole.MarkupLine($"Start: [green]{start}[/]");
+        AnsiConsole.MarkupLine($"End: [green]{end}[/]");
+        AnsiConsole.MarkupLine($"Duration: [green]{(int)duration.TotalHours}h {(int)Math.Round(duration.TotalMinutes % 60)}m[/]");
+        var saveSession = AnsiConsole.Confirm("\nDo you want to save this session?");
 
-        AnsiConsole.MarkupLine("[green]Record saved successfully! Press any key to return to menu.[/]");
+        if (saveSession)
+        {
+            CodingRecord record = new()
+            {
+                DateStart = start,
+                DateEnd = end,
+                Duration = duration
+            };
+
+            dataAccess.InsertRecord(record);
+            AnsiConsole.MarkupLine("\n[green]Record saved successfully! Press any key to return to menu.[/]");
+        }
+        else
+        {
+            AnsiConsole.MarkupLine("\n[red]Session discarded. Press any key to return to menu.[/]");
+        }
+
         Console.ReadKey();
     }
+
 
 }
 

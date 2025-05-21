@@ -6,6 +6,6 @@ var dataAccess = new DataAccess();
 
 dataAccess.CreateDatabase();
 
-SeedData.SeedRecords(20); // comment out when done with testing
+//SeedData.SeedRecords(20); // comment out when done with testing
 
 UserInterface.MainMenu();
