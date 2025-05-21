@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CodingTracker.Golvi1124.Models;
+﻿using CodingTracker.Golvi1124.Models;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
@@ -120,4 +115,3 @@ internal class DataAccess
         }
     }
 }
-

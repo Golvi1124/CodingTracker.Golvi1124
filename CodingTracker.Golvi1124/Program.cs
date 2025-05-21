@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using CodingTracker.Golvi1124.Data;
+﻿using CodingTracker.Golvi1124.Data;
 using CodingTracker.Golvi1124.UI;
 
 var dataAccess = new DataAccess();
