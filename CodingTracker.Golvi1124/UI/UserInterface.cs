@@ -11,6 +11,7 @@ using Spectre.Console;
 using static CodingTracker.Golvi1124.UI.Enums;
 using CodingTracker.Golvi1124.Services;
 
+
 namespace CodingTracker.Golvi1124.UI;
 
 internal static class UserInterface
@@ -25,13 +26,15 @@ internal static class UserInterface
                    new SelectionPrompt<MainMenuChoices>()
                     .Title("What would you like to do?")
                     .AddChoices(
+                       MainMenuChoices.RunStopwatch,
                        MainMenuChoices.AddRecord,
                        MainMenuChoices.ViewRecords,
                        MainMenuChoices.UpdateRecord,
                        MainMenuChoices.DeleteRecord,
-                       MainMenuChoices.RunStopwatch,
+                       MainMenuChoices.AnalyseRecords,
                        MainMenuChoices.Quit)
-                    );
+       .UseConverter(choice => DisplayHelper.GetEnumDisplayName(choice))
+);
 
             switch (usersChoice)
             {
@@ -52,6 +55,9 @@ internal static class UserInterface
                 case MainMenuChoices.RunStopwatch:
                     RunStopwatchSession();
                     break;
+                case MainMenuChoices.AnalyseRecords:
+                    RunAnalyseMenu();
+                    break;
                 case MainMenuChoices.Quit:
                     System.Console.WriteLine("Goodbye");
                     isMenuRunning = false;
@@ -59,6 +65,51 @@ internal static class UserInterface
             }
         }
     }
+
+    internal static void RunAnalyseMenu()
+    {
+        var isAnalyseMenuRunning = true;
+
+        while (isAnalyseMenuRunning)
+        {
+            var usersChoice = AnsiConsole.Prompt(
+                   new SelectionPrompt<AnalyseMenuChoices>()
+                    .Title("What would you like to analyse?")
+                    .AddChoices(
+                       AnalyseMenuChoices.FilterPerPeriod,
+                       AnalyseMenuChoices.ViewTotalAndAverage,
+                       AnalyseMenuChoices.IsGoalReached,
+                       AnalyseMenuChoices.Quit)
+                    .UseConverter(choice => DisplayHelper.GetEnumDisplayName(choice))
+);
+
+            switch (usersChoice)
+            {
+                case AnalyseMenuChoices.FilterPerPeriod:
+                    Console.WriteLine("Coming soon...");
+                    break;
+                case AnalyseMenuChoices.ViewTotalAndAverage:
+                    Console.WriteLine("Coming soon..."); 
+                    break;
+                case AnalyseMenuChoices.IsGoalReached:
+                    Console.WriteLine("Coming soon...");
+                    break;
+                case AnalyseMenuChoices.Quit:
+                    System.Console.WriteLine("Goodbye");
+                    isAnalyseMenuRunning = false;
+                    break;
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
 
 
     private static void DeleteRecord()
