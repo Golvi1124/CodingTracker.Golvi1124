@@ -9,6 +9,7 @@ using CodingTracker.Golvi1124.Helpers;
 using CodingTracker.Golvi1124.Models;
 using Spectre.Console;
 using static CodingTracker.Golvi1124.UI.Enums;
+using CodingTracker.Golvi1124.Services;
 
 namespace CodingTracker.Golvi1124.UI;
 
@@ -28,6 +29,7 @@ internal static class UserInterface
                        MainMenuChoices.ViewRecords,
                        MainMenuChoices.UpdateRecord,
                        MainMenuChoices.DeleteRecord,
+                       MainMenuChoices.RunStopwatch,
                        MainMenuChoices.Quit)
                     );
 
@@ -47,6 +49,9 @@ internal static class UserInterface
                 case MainMenuChoices.DeleteRecord:
                     DeleteRecord();
                     break;
+                case MainMenuChoices.RunStopwatch:
+                    RunStopwatchSession();
+                    break;
                 case MainMenuChoices.Quit:
                     System.Console.WriteLine("Goodbye");
                     isMenuRunning = false;
@@ -54,6 +59,7 @@ internal static class UserInterface
             }
         }
     }
+
 
     private static void DeleteRecord()
     {
@@ -147,5 +153,26 @@ internal static class UserInterface
 
         return [startDate, endDate];
     }
+
+    private static void RunStopwatchSession()
+    {
+        var stopwatchService = new StopwatchService();
+        var dataAccess = new DataAccess();
+
+        var (start, end, duration) = stopwatchService.RunStopwatch();
+
+        CodingRecord record = new()
+        {
+            DateStart = start,
+            DateEnd = end,
+            Duration = duration
+        };
+
+        dataAccess.InsertRecord(record);
+
+        AnsiConsole.MarkupLine("[green]Record saved successfully! Press any key to return to menu.[/]");
+        Console.ReadKey();
+    }
+
 }
 

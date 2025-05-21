@@ -22,6 +22,9 @@ internal class Enums
         [Display(Name = "Update Record")]
         UpdateRecord,
 
+        [Display(Name = "Run Stopwatch")]
+        RunStopwatch,
+
         Quit
     }
 }
