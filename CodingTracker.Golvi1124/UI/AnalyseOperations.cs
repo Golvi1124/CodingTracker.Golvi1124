@@ -3,28 +3,64 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Spectre.Console;
+using CodingTracker.Golvi1124.Models;
+using CodingTracker.Golvi1124.Helpers;
 
 namespace CodingTracker.Golvi1124.UI;
 
 internal class AnalyseOperations
 {
-    internal static void FilterPerPeriod()
-    { 
-        Console.WriteLine("Coming soon...");
-        /* Let the user filter their coding records per period (weeks, days, years) and/or order ascending or descending.
-     ...make this just a filter for range and by specific times together with averaget etc in next method
+    internal static void FilterPerPeriod(IEnumerable<CodingRecord> records)
+    {
+        Console.Clear();
 
- *  Make helper method for ascending or descending to use accross
-        
-        Show data range. Oldest date and newest date (Don't show records, just the dates)
-        Validate the dates and don't allow older date to be after the newer date.
-        Don't allow to choose a date range that is not in the records.
-        Ask if want to see descending or ascending order.
-        
-        "Found 5 records between 2023-01-01 and 2023-01-05"
-            + Show records in a table.
-         */
+        if (!records.Any())
+        {
+            AnsiConsole.MarkupLine("[red]No records found in the system.[/]");
+            return;
+        }
+
+        var oldestRecord = records.Min(r => r.DateStart);
+        var newestRecord = records.Max(r => r.DateStart);
+
+        Console.WriteLine("Now you need to choose period you want to see records from.");
+        AnsiConsole.MarkupLine($"In system, records are from [green]{oldestRecord:dd-MM-yy}[/] to [green]{newestRecord:dd-MM-yy}[/]");
+
+        // Prompt for start date
+        DateTime startDate = Validation.GetValidDate(
+            "Enter the start date (dd-MM-yy):",
+            date => date.Date >= oldestRecord.Date && date.Date <= newestRecord.Date
+        );
+
+        // Prompt for end date
+        DateTime endDate = Validation.GetValidDate(
+            "Enter the end date (dd-MM-yy):",
+            date => date.Date >= startDate.Date && date.Date <= newestRecord.Date
+        );
+
+        // Ask for sort order
+        bool isDescending = Extras.AskSortDirection();
+
+        // Filter and sort records
+        var filtered = records
+            .Where(r => r.DateStart.Date >= startDate.Date && r.DateStart.Date <= endDate.Date)
+            .OrderBy(r => isDescending ? -r.DateStart.Ticks : r.DateStart.Ticks)
+            .ToList();
+
+        AnsiConsole.MarkupLine($"[blue]Found {filtered.Count} records between {startDate:dd-MM-yy} and {endDate:dd-MM-yy}[/]");
+
+        if (filtered.Any())
+        {
+            RecordOperations.ViewRecords(filtered);
+
+        }
+        else
+        {
+            AnsiConsole.MarkupLine("[red]No records found in the selected date range.[/]");
+        }
     }
+
 
 
 
@@ -52,7 +88,7 @@ internal class AnalyseOperations
          along with how many hours a day they would have to code to reach their goal.  
 
 
-        Make % of goal reached. Including if over the goal. Play with colors.
+        Make % of goal reached. Including if over the goal. Play with colors. Add emojis? xD
          */
     }
 

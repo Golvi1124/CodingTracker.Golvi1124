@@ -47,4 +47,28 @@ internal class Validation
 
         return endDate;
     }
+
+    internal static DateTime GetValidDate(string prompt, Func<DateTime, bool> dateValidator)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            string input = Console.ReadLine();
+
+            if (DateTime.TryParseExact(input, "dd-MM-yy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+            {
+                if (dateValidator(parsedDate))
+                {
+                    return parsedDate;
+                }
+
+                Console.WriteLine("Date is out of valid range. Try again.");
+            }
+            else
+            {
+                Console.WriteLine("Invalid format. Please use dd-MM-yy.");
+            }
+        }
+    }
+
 }

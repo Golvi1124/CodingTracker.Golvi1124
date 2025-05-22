@@ -37,6 +37,6 @@ internal class Enums
         [Display(Name = "Have I reached the goal?")] //set the goal and check if reached
         IsGoalReached,
 
-        Quit // back to main menu
+        Back // back to main menu
     }
 }

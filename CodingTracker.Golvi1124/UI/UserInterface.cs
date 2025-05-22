@@ -24,7 +24,7 @@ internal static class UserInterface
                        MainMenuChoices.DeleteRecord,
                        MainMenuChoices.AnalyseRecords,
                        MainMenuChoices.Quit)
-                    .UseConverter(choice => DisplayHelper.GetEnumDisplayName(choice)) // Display the enum name
+                    .UseConverter(choice => Extras.GetEnumDisplayName(choice)) // Display the enum name
                     );
 
             switch (usersChoice)
@@ -76,15 +76,18 @@ internal static class UserInterface
                        AnalyseMenuChoices.FilterPerPeriod,
                        AnalyseMenuChoices.ViewTotalAndAverage,
                        AnalyseMenuChoices.IsGoalReached,
-                       AnalyseMenuChoices.Quit)
-                    .UseConverter(choice => DisplayHelper.GetEnumDisplayName(choice))
+                       AnalyseMenuChoices.Back)
+                    .UseConverter(choice => Extras.GetEnumDisplayName(choice))
                     );
 
             switch (usersChoice)
             {
                 case AnalyseMenuChoices.FilterPerPeriod:
-                    AnalyseOperations.FilterPerPeriod();
+                    var dataAccess = new DataAccess();
+                    var records = dataAccess.GetAllRecords();
+                    AnalyseOperations.FilterPerPeriod(records);
                     break;
+
 
                 case AnalyseMenuChoices.ViewTotalAndAverage:
                     AnalyseOperations.ViewTotalAndAverage();
@@ -94,7 +97,7 @@ internal static class UserInterface
                     AnalyseOperations.IsGoalReached();
                     break;
 
-                case AnalyseMenuChoices.Quit:
+                case AnalyseMenuChoices.Back:
                     System.Console.WriteLine("Goodbye");
                     isAnalyseMenuRunning = false;
                     break;
