@@ -39,4 +39,14 @@ internal class Enums
 
         Back // back to main menu
     }
+
+    internal enum PeriodType
+    {
+        Year,
+        Month,
+        Week,
+        Day,
+
+        Back 
+    }
 }

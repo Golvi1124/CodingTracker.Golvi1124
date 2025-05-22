@@ -53,7 +53,6 @@ internal class AnalyseOperations
         if (filtered.Any())
         {
             RecordOperations.ViewRecords(filtered);
-
         }
         else
         {
@@ -66,7 +65,10 @@ internal class AnalyseOperations
 
     internal static void ViewTotalAndAverage()
     {
-        Console.WriteLine("Coming soon...");
+        Console.Clear();
+
+        PeriodType selectedPeriod = AskPeriodType();
+
         /* Create reports where the users can see their total and average coding session per period.
          
 * create sorting method to use here and in the next method
