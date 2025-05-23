@@ -11,11 +11,14 @@ internal class DataAccess
         .AddJsonFile("appsettings.json")
         .Build();
 
-    private string ConnectionString;
+    private readonly string ConnectionString;
+
     public DataAccess()
     {
-        ConnectionString = configuration.GetSection("ConnectionStrings")["DefaultConnection"];
+        var configValue = configuration.GetSection("ConnectionStrings")["DefaultConnection"];
+        ConnectionString = configValue ?? throw new InvalidOperationException("Missing DB connection string.");
     }
+
 
     internal void CreateDatabase()
     {

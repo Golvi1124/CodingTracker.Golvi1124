@@ -103,38 +103,4 @@ internal static class UserInterface
             }
         }
     }
-
-    internal static void AskPeriodType()
-    {
-        var isPeriodMenuRunning = true;
-
-        while (isPeriodMenuRunning)
-        {
-            var usersChoice = AnsiConsole.Prompt(
-                   new SelectionPrompt<PeriodType>()
-                    .Title("What would you like to analyse?")
-                    .AddChoices(
-                       PeriodType.Day,
-                       PeriodType.Week,
-                       PeriodType.Month,
-                       PeriodType.Year,
-                       PeriodType.Back)
-                    .UseConverter(choice => Extras.GetEnumDisplayName(choice))
-                    );
-            switch (usersChoice)
-            {
-                case PeriodType.Day:
-                    break;
-                case PeriodType.Week:
-                    break;
-                case PeriodType.Month:
-                    break;
-                case PeriodType.Year:
-                    break;
-                case PeriodType.Back:
-                    isPeriodMenuRunning = false;
-                    break;
-            }
-        }
-    }
 }

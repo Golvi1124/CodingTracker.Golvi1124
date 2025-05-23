@@ -37,7 +37,7 @@ internal class Enums
         [Display(Name = "Have I reached the goal?")] //set the goal and check if reached
         IsGoalReached,
 
-        Back // back to main menu
+        Back
     }
 
     internal enum PeriodType
@@ -46,7 +46,6 @@ internal class Enums
         Month,
         Week,
         Day,
-
         Back 
     }
 }

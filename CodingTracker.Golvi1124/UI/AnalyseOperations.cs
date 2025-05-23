@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Spectre.Console;
 using CodingTracker.Golvi1124.Models;
 using CodingTracker.Golvi1124.Helpers;
+using static CodingTracker.Golvi1124.UI.Enums;
+using CodingTracker.Golvi1124.Data;
 
 namespace CodingTracker.Golvi1124.UI;
 
@@ -66,20 +68,47 @@ internal class AnalyseOperations
     internal static void ViewTotalAndAverage()
     {
         Console.Clear();
+        var allRecords = new DataAccess().GetAllRecords();
 
-        PeriodType selectedPeriod = AskPeriodType();
+        PeriodType period = Extras.AskPeriodType();
 
-        /* Create reports where the users can see their total and average coding session per period.
-         
-* create sorting method to use here and in the next method
-            
-        Make some sort of calendar, where can see info that there is a record on that date.
-        Menu choices for year, month, week, day.
-        "In selected period you coded X times
-              - with total of X hours X minutes
-              - with average of X hours X minutes per session
-              - with average of X hours X minutes per this period
-         */
+        if (period == PeriodType.Back)
+            return;
+
+        var range = Extras.AskDateRangeForPeriod(period);
+
+        var recordsInRange = allRecords
+            .Where(r => r.DateStart >= range.Start && r.DateStart <= range.End)
+            .ToList();
+
+        Console.Clear();
+
+        if (!recordsInRange.Any())
+        {
+            AnsiConsole.MarkupLine($"[red]No records found between {range.Start:dd-MM-yy} and {range.End:dd-MM-yy}.[/]");
+            return;
+        }
+
+        int sessionCount = recordsInRange.Count;
+        double totalMinutes = recordsInRange.Sum(r => r.Duration.TotalMinutes);
+        TimeSpan totalDuration = TimeSpan.FromMinutes(totalMinutes);
+
+        double averagePerSessionMinutes = totalMinutes / sessionCount;
+        TimeSpan averagePerSession = TimeSpan.FromMinutes(averagePerSessionMinutes);
+
+        double periodDays = (range.End - range.Start).TotalDays + 1;
+        double averagePerDayMinutes = totalMinutes / periodDays;
+        TimeSpan averagePerDay = TimeSpan.FromMinutes(averagePerDayMinutes);
+
+        AnsiConsole.MarkupLine($"[blue]In selected period ({range.Start:dd-MM-yy} to {range.End:dd-MM-yy}):[/]");
+        AnsiConsole.MarkupLine($"[green]• Sessions:[/] {sessionCount}");
+        AnsiConsole.MarkupLine($"[green]• Total time:[/] {totalDuration.Hours}h {totalDuration.Minutes % 60}m");
+        AnsiConsole.MarkupLine($"[green]• Avg per session:[/] {averagePerSession.Hours}h {averagePerSession.Minutes % 60}m");
+        AnsiConsole.MarkupLine($"[green]• Avg per day:[/] {averagePerDay.Hours}h {averagePerDay.Minutes % 60}m");
+
+        Console.WriteLine();
+        AnsiConsole.MarkupLine("[grey]Press any key to return to the Analyse Menu...[/]");
+        Console.ReadKey();
     }
 
 
@@ -93,6 +122,10 @@ internal class AnalyseOperations
         Make % of goal reached. Including if over the goal. Play with colors. Add emojis? xD
          */
     }
+
+
+
+
 
 
 
