@@ -70,7 +70,7 @@ internal class DataAccess
         }
     }
 
-    internal void BulkInsertRecords(List<CodingRecord> records)
+    internal void BulkInsertRecords(List<CodingRecord> records) // Keeping for myself, but not used
     {
         using (var connection = new SqliteConnection(ConnectionString))
         {

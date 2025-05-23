@@ -18,20 +18,18 @@ public static class Extras
 
     internal static bool AskSortDirection()
     {
-        Console.Write("Sort records descending? (y/n): ");
+        AnsiConsole.Markup("[blue]Sort records descending? (y/n): [/]");
         string? input = Console.ReadLine()?.Trim().ToLower();
 
         return input == "y" || input == "yes";
     }
 
-
     internal static PeriodType AskPeriodType()
     {
         var selected = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("Choose [green]period type[/] for the report:")
-                .PageSize(4)
-                .AddChoices(new[] { "Year", "Month", "Week", "Day", "Back" })
+                .Title("Choose [blue]period type[/] for the report:")
+                .AddChoices(["Year", "Month", "Week", "Day", "[grey]Back[/]"])
         );
 
         return selected switch
@@ -40,8 +38,8 @@ public static class Extras
             "Month" => PeriodType.Month,
             "Week" => PeriodType.Week,
             "Day" => PeriodType.Day,
-            "Back" => PeriodType.Back,
-            _ => throw new Exception("Invalid selection")
+            "[grey]Back[/]" => PeriodType.Back,
+            _ => throw new Exception("[red]Invalid selection[/]")
         };
     }
 

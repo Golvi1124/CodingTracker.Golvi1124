@@ -2,7 +2,7 @@
 
 namespace CodingTracker.Golvi1124.Data;
 
-internal static class SeedData
+internal static class SeedData // Leaving this for myself
 {
     internal static void SeedRecords(int count)
     {
