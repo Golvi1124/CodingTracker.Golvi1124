@@ -114,14 +114,69 @@ internal class AnalyseOperations
 
     internal static void IsGoalReached()
     {
-        Console.WriteLine("Coming soon...");
-        /*Create the ability to set coding goals and show how far the users are from reaching their goal, 
-         along with how many hours a day they would have to code to reach their goal.  
+        Console.Clear();
 
+        var allRecords = new DataAccess().GetAllRecords();
+        PeriodType period = Extras.AskPeriodType();
 
-        Make % of goal reached. Including if over the goal. Play with colors. Add emojis? xD
-         */
+        if (period == PeriodType.Back)
+            return;
+
+        var range = Extras.AskDateRangeForPeriod(period);
+
+        var recordsInRange = allRecords
+            .Where(r => r.DateStart >= range.Start && r.DateStart <= range.End)
+            .ToList();
+
+        Console.Clear();
+
+        if (!recordsInRange.Any())
+        {
+            AnsiConsole.MarkupLine($"[red]No coding sessions found between {range.Start:dd-MM-yy} and {range.End:dd-MM-yy}.[/]");
+            Console.ReadKey();
+            return;
+        }
+
+        // Ask for user's daily goal
+        int goalHours = AnsiConsole.Ask<int>("How many [green]hours[/] per day did you want to code?");
+        int goalMinutes = AnsiConsole.Ask<int>("How many [green]additional minutes[/] per day?");
+        var goalPerDay = TimeSpan.FromMinutes(goalHours * 60 + goalMinutes);
+
+        // Calculate total coded time
+        double totalMinutes = recordsInRange.Sum(r => r.Duration.TotalMinutes);
+        double daysInPeriod = (range.End - range.Start).TotalDays + 1;
+        var actualPerDay = TimeSpan.FromMinutes(totalMinutes / daysInPeriod);
+
+        double progressPercent = actualPerDay.TotalMinutes / goalPerDay.TotalMinutes * 100;
+
+        Console.Clear();
+
+        AnsiConsole.MarkupLine($"[bold]Selected period:[/] [blue]{range.Start:dd-MM-yy} to {range.End:dd-MM-yy}[/]");
+        AnsiConsole.MarkupLine($"[bold]Your goal:[/] {goalPerDay.Hours}h {goalPerDay.Minutes}m per day");
+        AnsiConsole.MarkupLine($"[bold]Your result:[/] {actualPerDay.Hours}h {actualPerDay.Minutes}m per day");
+
+        if (actualPerDay >= goalPerDay)
+        {
+            TimeSpan over = actualPerDay - goalPerDay;
+
+            AnsiConsole.MarkupLine($"\n[green]Congratulations! 🎉[/]");
+            AnsiConsole.MarkupLine($"You exceeded your goal by [green]{over.Hours}h {over.Minutes}m[/] per day.");
+            AnsiConsole.MarkupLine($"[bold]Progress:[/] [green]{progressPercent:F1}%[/]");
+        }
+        else
+        {
+            TimeSpan missing = goalPerDay - actualPerDay;
+
+            AnsiConsole.MarkupLine($"\n[yellow]Keep going! 💪[/]");
+            AnsiConsole.MarkupLine($"You were short by [red]{missing.Hours}h {missing.Minutes}m[/] per day.");
+            AnsiConsole.MarkupLine($"[bold]Progress:[/] [yellow]{progressPercent:F1}%[/]");
+        }
+
+        Console.WriteLine();
+        AnsiConsole.MarkupLine("[grey]Press any key to return to the Analyse Menu...[/]");
+        Console.ReadKey();
     }
+
 
 
 
