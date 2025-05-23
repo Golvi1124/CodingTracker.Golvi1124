@@ -7,18 +7,18 @@ namespace CodingTracker.Golvi1124.Data;
 
 internal class DataAccess
 {
-    IConfiguration configuration = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json")
-        .Build();
-
+    private readonly IConfiguration configuration;
     private readonly string ConnectionString;
 
     public DataAccess()
     {
+        configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+
         var configValue = configuration.GetSection("ConnectionStrings")["DefaultConnection"];
         ConnectionString = configValue ?? throw new InvalidOperationException("Missing DB connection string.");
     }
-
 
     internal void CreateDatabase()
     {
@@ -36,6 +36,7 @@ internal class DataAccess
             connection.Execute(createTableQuery);
         }
     }
+
     internal void InsertRecord(CodingRecord record)
     {
         using (var connection = new SqliteConnection(ConnectionString))

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Spectre.Console;
-using CodingTracker.Golvi1124.Models;
+﻿using CodingTracker.Golvi1124.Data;
 using CodingTracker.Golvi1124.Helpers;
+using CodingTracker.Golvi1124.Models;
+using Spectre.Console;
 using static CodingTracker.Golvi1124.UI.Enums;
-using CodingTracker.Golvi1124.Data;
 
 namespace CodingTracker.Golvi1124.UI;
 
@@ -23,8 +18,10 @@ internal class AnalyseOperations
             return;
         }
 
-        var oldestRecord = records.Min(r => r.DateStart);
-        var newestRecord = records.Max(r => r.DateStart);
+        var oldestRecord = records.Any() ? records.Min(r => r.DateStart) : DateTime.MinValue;
+        var newestRecord = records.Any() ? records.Max(r => r.DateStart) : DateTime.MaxValue;
+
+
 
         Console.WriteLine("Now you need to choose period you want to see records from.");
         AnsiConsole.MarkupLine($"In system, records are from [green]{oldestRecord:dd-MM-yy}[/] to [green]{newestRecord:dd-MM-yy}[/]");
@@ -45,10 +42,16 @@ internal class AnalyseOperations
         bool isDescending = Extras.AskSortDirection();
 
         // Filter and sort records
-        var filtered = records
-            .Where(r => r.DateStart.Date >= startDate.Date && r.DateStart.Date <= endDate.Date)
-            .OrderBy(r => isDescending ? -r.DateStart.Ticks : r.DateStart.Ticks)
-            .ToList();
+        var filtered = isDescending
+            ? records
+                .Where(r => r.DateStart.Date >= startDate.Date && r.DateStart.Date <= endDate.Date)
+                .OrderByDescending(r => r.DateStart)
+                .ToList()
+            : records
+                .Where(r => r.DateStart.Date >= startDate.Date && r.DateStart.Date <= endDate.Date)
+                .OrderBy(r => r.DateStart)
+                .ToList();
+
 
         AnsiConsole.MarkupLine($"[blue]Found {filtered.Count} records between {startDate:dd-MM-yy} and {endDate:dd-MM-yy}[/]");
 
@@ -61,9 +64,6 @@ internal class AnalyseOperations
             AnsiConsole.MarkupLine("[red]No records found in the selected date range.[/]");
         }
     }
-
-
-
 
     internal static void ViewTotalAndAverage()
     {
@@ -110,7 +110,6 @@ internal class AnalyseOperations
         AnsiConsole.MarkupLine("[grey]Press any key to return to the Analyse Menu...[/]");
         Console.ReadKey();
     }
-
 
     internal static void IsGoalReached()
     {
@@ -176,12 +175,4 @@ internal class AnalyseOperations
         AnsiConsole.MarkupLine("[grey]Press any key to return to the Analyse Menu...[/]");
         Console.ReadKey();
     }
-
-
-
-
-
-
-
-
 }

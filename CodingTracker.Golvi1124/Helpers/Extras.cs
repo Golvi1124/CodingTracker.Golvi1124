@@ -16,14 +16,14 @@ public static class Extras
         return attribute?.Name ?? value.ToString();
     }
 
-
     internal static bool AskSortDirection()
     {
         Console.Write("Sort records descending? (y/n): ");
-        string input = Console.ReadLine()?.Trim().ToLower();
+        string? input = Console.ReadLine()?.Trim().ToLower();
 
         return input == "y" || input == "yes";
     }
+
 
     internal static PeriodType AskPeriodType()
     {
@@ -62,7 +62,6 @@ public static class Extras
                 return AskForDayRange();
 
             case PeriodType.Back:
-
 
             default:
                 throw new Exception("Unsupported period");

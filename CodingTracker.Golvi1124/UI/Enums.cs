@@ -46,6 +46,6 @@ internal class Enums
         Month,
         Week,
         Day,
-        Back 
+        Back
     }
 }

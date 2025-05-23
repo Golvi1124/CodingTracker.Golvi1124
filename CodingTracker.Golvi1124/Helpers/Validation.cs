@@ -53,7 +53,7 @@ internal class Validation
         while (true)
         {
             Console.Write(prompt);
-            string input = Console.ReadLine();
+            string? input = Console.ReadLine();
 
             if (DateTime.TryParseExact(input, "dd-MM-yy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
             {
@@ -70,5 +70,4 @@ internal class Validation
             }
         }
     }
-
 }
