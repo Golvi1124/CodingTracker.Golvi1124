@@ -10,7 +10,7 @@ internal class Validation
         int output = 0;
         while (!int.TryParse(input, out output) || Convert.ToInt32(input) < 0)
         {
-            input = AnsiConsole.Ask<string>("Invalid number: " + message);
+            input = AnsiConsole.Ask<string>("[red]Invalid number:[/] " + message);
         }
 
         return output;
@@ -21,7 +21,7 @@ internal class Validation
         DateTime date;
         while (!DateTime.TryParseExact(input, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
         {
-            input = AnsiConsole.Ask<string>("\n\nInvalid date. Format: dd-mm-yy hh:mm (24 hour clock). Please try again\n\n");
+            input = AnsiConsole.Ask<string>("\n\n[red]Invalid date.[/] Format: dd-mm-yy hh:mm (24 hour clock). Please try again\n\n");
         }
 
         return date;
@@ -32,7 +32,7 @@ internal class Validation
         DateTime endDate;
         while (!DateTime.TryParseExact(endDateInput, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
         {
-            endDateInput = AnsiConsole.Ask<string>("\n\nInvalid date. Format: dd-mm-yy hh:mm (24 hour clock). Please try again\n\n");
+            endDateInput = AnsiConsole.Ask<string>("\n\n[red]Invalid date.[/] Format: dd-mm-yy hh:mm (24 hour clock). Please try again\n\n");
         }
 
         while (startDate > endDate)
@@ -41,7 +41,7 @@ internal class Validation
 
             while (!DateTime.TryParseExact(endDateInput, "dd-MM-yy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
             {
-                endDateInput = AnsiConsole.Ask<string>("\n\nInvalid date. Format: dd-mm-yy hh:mm (24 hour clock). PLease try again\n\n");
+                endDateInput = AnsiConsole.Ask<string>("\n\n[red]Invalid date.[/] Format: dd-mm-yy hh:mm (24 hour clock). PLease try again\n\n");
             }
         }
 
@@ -52,7 +52,7 @@ internal class Validation
     {
         while (true)
         {
-            Console.Write(prompt);
+            AnsiConsole.Markup(prompt + " "); // Allows markup
             string? input = Console.ReadLine();
 
             if (DateTime.TryParseExact(input, "dd-MM-yy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
@@ -62,11 +62,11 @@ internal class Validation
                     return parsedDate;
                 }
 
-                Console.WriteLine("Date is out of valid range. Try again.");
+                AnsiConsole.MarkupLine("[red]Date is out of valid range.[/] Try again.");
             }
             else
             {
-                Console.WriteLine("Invalid format. Please use dd-MM-yy.");
+                AnsiConsole.Markup("[red]Invalid format.[/] Please use dd-MM-yy.");
             }
         }
     }

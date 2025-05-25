@@ -23,18 +23,19 @@ internal class AnalyseOperations
 
 
 
-        Console.WriteLine("Now you need to choose period you want to see records from.");
+        AnsiConsole.Markup("Now you need to choose [blue]period[/] you want to see records from.");
         AnsiConsole.MarkupLine($"In system, records are from [green]{oldestRecord:dd-MM-yy}[/] to [green]{newestRecord:dd-MM-yy}[/]");
+
 
         // Prompt for start date
         DateTime startDate = Validation.GetValidDate(
-            "Enter the start date (dd-MM-yy):",
+            "Enter the [blue]start[/] date (dd-MM-yy):",
             date => date.Date >= oldestRecord.Date && date.Date <= newestRecord.Date
         );
 
         // Prompt for end date
         DateTime endDate = Validation.GetValidDate(
-            "Enter the end date (dd-MM-yy):",
+            "Enter the [blue]end[/] date (dd-MM-yy):",
             date => date.Date >= startDate.Date && date.Date <= newestRecord.Date
         );
 
@@ -53,7 +54,7 @@ internal class AnalyseOperations
                 .ToList();
 
 
-        AnsiConsole.MarkupLine($"[blue]Found {filtered.Count} records between {startDate:dd-MM-yy} and {endDate:dd-MM-yy}[/]");
+        AnsiConsole.MarkupLine($"[green]Found {filtered.Count} records between {startDate:dd-MM-yy} and {endDate:dd-MM-yy}[/]");
 
         if (filtered.Any())
         {

@@ -9,7 +9,7 @@ internal class Sorting
 
     internal static DateRange AskForYearRange()
     {
-        var year = AnsiConsole.Ask<int>("Enter [green]year[/] (e.g., 2024):");
+        var year = AnsiConsole.Ask<int>("Enter [blue]year[/] (e.g., 2025):");
         return new DateRange(
             new DateTime(year, 1, 1),
             new DateTime(year, 12, 31, 23, 59, 59)
@@ -18,7 +18,7 @@ internal class Sorting
 
     internal static DateRange AskForMonthRange()
     {
-        var input = AnsiConsole.Ask<string>("Enter [green]year and month[/] (format: yyyy-MM):");
+        var input = AnsiConsole.Ask<string>("Enter [blue]year and month[/] (format: yyyy-MM):");
 
         DateTime parsed;
 
@@ -35,7 +35,7 @@ internal class Sorting
 
     internal static DateRange AskForWeekRange()
     {
-        var input = AnsiConsole.Ask<string>("Enter a [green]date[/] within the week (format: dd-MM-yy):");
+        var input = AnsiConsole.Ask<string>("Enter a [blue]date[/] within the week (format: dd-MM-yy):");
 
         DateTime parsed;
         while (!DateTime.TryParseExact(input, "dd-MM-yy", null, DateTimeStyles.None, out parsed))
@@ -52,7 +52,7 @@ internal class Sorting
 
     internal static DateRange AskForDayRange()
     {
-        var input = AnsiConsole.Ask<string>("Enter [green]exact date[/] (format: dd-MM-yy):");
+        var input = AnsiConsole.Ask<string>("Enter [blue]exact date[/] (format: dd-MM-yy):");
 
         DateTime parsed;
 
