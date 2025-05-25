@@ -159,7 +159,7 @@ internal class AnalyseOperations
         {
             TimeSpan over = actualPerDay - goalPerDay;
 
-            AnsiConsole.MarkupLine($"\n[green]Congratulations! 🎉[/]");
+            AnsiConsole.MarkupLine($"\n[green]Congratulations![/]");
             AnsiConsole.MarkupLine($"You exceeded your goal by [green]{over.Hours}h {over.Minutes}m[/] per day.");
             AnsiConsole.MarkupLine($"[bold]Progress:[/] [green]{progressPercent:F1}%[/]");
         }
@@ -167,7 +167,7 @@ internal class AnalyseOperations
         {
             TimeSpan missing = goalPerDay - actualPerDay;
 
-            AnsiConsole.MarkupLine($"\n[yellow]Keep going! 💪[/]");
+            AnsiConsole.MarkupLine($"\n[yellow]Keep going![/]");
             AnsiConsole.MarkupLine($"You were short by [red]{missing.Hours}h {missing.Minutes}m[/] per day.");
             AnsiConsole.MarkupLine($"[bold]Progress:[/] [yellow]{progressPercent:F1}%[/]");
         }
